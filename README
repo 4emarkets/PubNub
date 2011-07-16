@@ -1,2 +1,7 @@
-Hello 
-Let's try building it
+Group Chat Module
+Cloud computing is the underlying technology used to build Chat module. 
+All the extensive features of cloud computing is taken into account while developing this module
+
+Live Blogging
+A very rich featured live blogging developed in drupal with the pubnub cloud computing technology. 
+The feature includes Image and video upload.
