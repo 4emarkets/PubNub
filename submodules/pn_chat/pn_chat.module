@@ -1,0 +1,80 @@
+<?php
+// $Id: pubnub.module,v 0.1 2011/06/21 00:00:00 crotown Exp $
+/**
+* @file
+* Module that allows users of a site to live blog using Pubnub API
+*/
+
+/**
+* Implementation of hook_help()
+*/
+
+	function pn_chat_help($path, $arg) {
+		switch ($path) {
+			case "admin/help#pn_chat":
+			$output = '<h5>'.  t("Group Chat Module") .'</h3>';
+			$output .= '<p>'.  t("Cloud computing is the underlying technology used to build Chat module. All the extensive features of cloud computing is taken into account while developing this module.").'</p>';
+			$output .= '<h5>'.  t("How to use this module") .'</h3>';
+			$output .= '<p>'.  t("Add Chat module into Drupal modules folder
+
+Activate module using Admin Panel
+
+Using configuration link from the admin section open PubNub setting and add the API provided by the site http://www.pubnub.com
+
+Place PubNub chat box using structure Menu using admin section
+
+place the pubnub chat block and save the setting.").'</p>';			
+		return $output;
+		}
+	} 
+	
+/**
+ * Preprocess the pubnub_shoutbox theme hook.
+ *
+ * Inputs: $publish_key, $subscribe_key, block
+ *
+ * @see pubnub-shoutbox--block.tpl.php
+ * @see theme_pubnub_shoutbox()
+ */
+ function template_preprocess_pubnub_shoutbox(&$variables) {
+ global $user;
+  if ($variables['block']) {
+    $variables['theme_hook_suggestions'][] = 'pubnub_shoutbox__block';
+  }
+  $variables['publish_key'] = check_plain(variable_get('pubnub_publish_value', ''));
+  $variables['subscribe_key'] = check_plain(variable_get('pubnub_subscribe_value', ''));
+  $variables['username'] = (isset($user->name))?check_plain($user->name):"";  
+}
+
+/**
+* Implement hook_theme()
+**/
+function pn_chat_theme()
+{
+	$theme_hooks = array(
+		'pubnub_shoutbox' => array(
+      	'template' => 'pubnub-shoutbox--block',
+      	'variables' => array( 'block' => NULL,'publish_key' => NULL, 'subscribe_key' => NULL),
+   		),
+	);
+	return $theme_hooks;
+}
+
+function pn_chat_block_info() {
+  $blocks['pubnub_shoutbox'] = array(
+    'info' => t('PubNub Chat'), //The name that will appear in the block list.
+  );
+  return $blocks;
+}
+
+function pn_chat_block_view($delta = '') {
+	$imgpath = drupal_get_path('module', 'pubnub_communicator').'/images/pubnub-list-widget.png';
+  switch($delta){
+    case 'pubnub_shoutbox':
+      $block['subject'] = t('Chat');
+      if(user_access('access content')){
+      		$block['content'] = '<div class="pn_power">Powered by <a href="http://www.pubnub.com/" alt="Pubnub" target="_blank">PubNub</a></div>'.theme('pubnub_shoutbox', array('block' => $block));
+        }
+  }
+  return $block;
+}

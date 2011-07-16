@@ -1,0 +1,177 @@
+<?php
+// $Id: pubnub.module,v 0.1 2011/06/21 00:00:00 crotown Exp $
+/**
+* @file
+* Module that allows users of a site to live blog using Pubnub API
+*/
+
+/**
+* Implementation of hook_help()
+*/
+
+	function pn_blog_help($path, $arg) {
+		switch ($path) {
+			case "admin/help#pn_blog":
+			$output = '<h5>'.  t("Live Blogging") .'</h3>';
+			$output .= '<p>'.  t("A very rich featured live blogging developed in drupal with the pubnub cloud computing technology. The feature includes Image and video upload.").'</p>';
+			$output .= '<h5>'.  t("How to use this module") .'</h3>';
+			$output .= '<p>'.  t("Add Blogg module into Drupal modules folder
+
+Activate module using Admin Panel
+
+Using configuration link from the admin section open PubNub setting and add the API provided by the site http://www.pubnub.com
+
+Start using live Blogg by navigation menu use the blogger link").'</p>';
+		}
+	} 
+	
+/**
+* Implementation of hook_menu()
+*/
+	function pn_blog_menu() {
+			
+		$items['blogger'] = array(
+			'title' => 'Blogger',
+			'description' => 'Post your blogs here.',
+			'page callback' => 'pn_blog_blogger',
+			'access arguments' => array('access content'),
+			'file' => 'includes/module_forms.inc'
+		);
+		$items['blogger/%'] = array(
+			'title' => 'Blogger',
+			'page callback' => 'pn_blog_blogger',
+			'page arguments' => array(1),
+			'access arguments' => array('access content'),
+			'file' => 'includes/module_forms.inc'
+		);
+		return $items;
+	}
+	
+
+function pn_blog_blogger($uuid = NULL)
+{
+	global $user, $base_url,$base_path;
+	
+	if($uuid == NULL)
+	{
+		if($user->uid)
+			$uuid = $user->uid;
+		else
+			drupal_goto('user');
+	}
+	
+	drupal_add_css(drupal_get_path('module', 'pubnub_communicator') . '/pubnub_style.css', array('group' => CSS_DEFAULT));
+	drupal_add_js(drupal_get_path('module', 'pubnub_communicator') . '/pubnub_blog.js');
+	drupal_add_js(drupal_get_path('module', 'pubnub_communicator') . '/flowplayer-3.2.6.min.js');
+	
+	
+	$result = '<div class="pn_power">Powered by <a href="http://www.pubnub.com/" alt="Pubnub" target="_blank">PubNub</a></div>';
+	if($user->uid && $uuid == $user->uid)
+	{
+		$f = drupal_get_form('pn_blogform');
+		$result .= drupal_render($f);
+	}
+	
+	/*## Require Pubnub API
+    require_once(drupal_get_path('module', 'pubnub_communicator').'/Pubnub.php');
+	$publish_key = (check_plain(variable_get('pubnub_publish_value', '')))?check_plain(variable_get('pubnub_publish_value', '')):"demo";
+  	$subscribe_key = (check_plain(variable_get('pubnub_subscribe_value', '')))?check_plain(variable_get('pubnub_subscribe_value', '')):"demo";
+	
+    ## -----------------------------------------
+    ## Create Pubnub Client API (INITIALIZATION)
+    ## -----------------------------------------
+    $pubnub = new Pubnub( $publish_key,$subscribe_key );
+
+
+	$pn_channel = str_replace(':','',str_replace('/','_',$base_url)).'_'.$uuid;
+	
+	
+    ## Get History
+    $messages = $pubnub->history(array(
+        'channel' => $pn_channel, ## REQUIRED Channel to Send
+		'limit' => 100
+    ));
+	
+	$messages = array_reverse($messages);*/
+	$message = '';
+	$messages = array();
+	$rs_msgs = db_query("SELECT * FROM {pubnub_blog} WHERE uid = :uid ORDER BY posted_on DESC",array(':uid' => $uuid));
+	foreach ($rs_msgs as $row_msgs)
+	{
+		$message .= '<div class="pn_blog">'.$row_msgs->blog_text.'</div>';
+	}
+		
+	$result .= '<div id="pubnub_blogs">'.$message.'</div>';
+	$result .= '<div class="pn_powered"><a href="http://www.fourbridgetech.com/" alt="Pubnub" target="_blank"><img src="'.$base_path.drupal_get_path('module', 'pubnub_communicator').'/images/4brid.png" /></a></div>';
+	return $result;
+}
+
+function pn_blogform_submit($form, $form_state) {
+	global $user, $base_url, $base_path;
+	
+	if(!$user->uid)
+		return false;
+	
+	## Create directory if do not exist
+	$upload_dir = 'sites/default/files/pubnub_files';
+	if(!file_exists($upload_dir) || !is_dir($upload_dir))
+	{
+		mkdir($upload_dir);
+		chmod($upload_dir,'0755');
+	}
+	
+	$validators = array(
+		'file_validate_extensions' => array('jpg jpeg gif png flv')
+	  );
+	$file = file_save_upload('picorvid', $validators,'public://pubnub_files/');
+	if(isset($file->uri)){
+		$file->status = 1;
+		file_save($file);
+	}
+	
+	require_once(drupal_get_path('module', 'pubnub_communicator')."/Pubnub.php");
+	$publish_key = (check_plain(variable_get('pubnub_publish_value', '')))?check_plain(variable_get('pubnub_publish_value', '')):"demo";
+  	$subscribe_key = (check_plain(variable_get('pubnub_subscribe_value', '')))?check_plain(variable_get('pubnub_subscribe_value', '')):"demo";
+	
+	
+	$pn_channel = str_replace(':','',str_replace('/','_',$base_url)).'_'.$user->uid;
+	$pn_message = nl2br(htmlentities(trim(trim($form['pubnub_blog']['#value']),"\n")));
+	if(isset($file) && $file->filename)
+	{
+		$filexp = explode('/',$file->filemime);
+		if($pn_message)
+			$pn_message.='<br/>';
+		
+		if($filexp[0] == 'video')
+		{
+			$vidViewer = $base_path.drupal_get_path('module', 'pubnub_communicator').'/images/flowplayer-3.2.7.swf';
+			$pn_message .= '<a href="'.$base_path.$upload_dir.'/'.$file->filename.'" style="display:block;width:430px;height:330px" id="player_'.$file->fid.'_'.$file->timestamp.'"></a>';
+			$pn_message .= '<script>flowplayer("player_'.$file->fid.'_'.$file->timestamp.'", "'.$vidViewer.'",{clip:{autoPlay: false,autoBuffering: false}});</script>';
+		}
+		else	
+			$pn_message .= '<img src="'.$base_path.$upload_dir.'/'.$file->filename.'" border="0" width="300" />';
+		
+		//$pn_message = url_encode($pn_message);
+	}
+	$bid = db_insert('pubnub_blog')->fields(array(
+  			'uid' => $user->uid,
+  			'blog_text' => $pn_message,
+  			'posted_on' => REQUEST_TIME,
+			))->execute();
+	//db_query("INSERT INTO `pubnub_blog` (`uid`,`blog_text`,`posted_on`) VALUES (%d,'%s', UNIX_TIMESTAMP(NOW()))",array($user->uid, $pn_message));
+	## -----------------------------------------
+    ## Create Pubnub Client API (INITIALIZATION)
+    ## -----------------------------------------
+	$pubnub = new Pubnub( $publish_key,$subscribe_key );
+	
+	## ----------------------
+    ## Send Message (PUBLISH)
+    ## ----------------------
+    $info = $pubnub->publish(array(
+        'channel' => $pn_channel,
+        'message' => $pn_message
+    ));
+	
+	$rerurn = '<div class="pn_blog">'.$pn_message.'</div>';
+ 	return $rerurn;
+}

@@ -1,0 +1,12 @@
+;Pubnub Communicator module info
+
+name = PubNub Live Blogging
+description = Lets site users blog/chat making use of Pubnub cloud.
+
+dependencies[] = pubnub_communicator
+
+version = 1.0
+core = 7.x
+php = 5.3
+
+;configure = admin/config/system/pubnub

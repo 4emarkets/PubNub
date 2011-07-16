@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * Implementation of hook_install().
+ */
+function pubnub_communicator_install() {
+  variable_set('pubnub_publish_value', 'demo');
+  variable_set('pubnub_subscribe_value', 'demo');
+  variable_set('pubnub_secret_value', '');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function pubnub_communicator_uninstall() {
+  variable_del('pubnub_publish_value');
+  variable_del('pubnub_subscribe_value');
+  variable_del('pubnub_secret_value');
+}

@@ -1,0 +1,32 @@
+<?php
+
+
+function pn_blog_schema() {
+  $schema['pubnub_blog'] = array(
+    'description' => 'Stores the blog posts made by the user.',
+    'fields' => array(
+      'bid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => "",
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'user id of the blogger',
+      ),
+      'blog_text' => array(
+        'type' => 'text',
+        'description' => 'Content of the posted blog',
+      ),
+	  'posted_on' => array(
+        'type' => 'int',
+        'description' => 'Unix timestamp of the post',
+      ),
+    ),
+    'primary key' => array('bid'),    
+  );
+  return $schema; 
+}

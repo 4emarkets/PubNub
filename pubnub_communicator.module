@@ -1,0 +1,70 @@
+<?php
+// $Id: pubnub.module,v 0.1 2011/06/21 00:00:00 crotown Exp $
+/**
+* @file
+* Module that allows users of a site to live blog using Pubnub API
+*/
+
+/**
+* Implementation of hook_help()
+*/
+
+	function pubnub_communicator_help($path, $arg) {
+		switch ($path) {
+			case "admin/help#pubnub_communicator":
+			$output = '<h5>'.  t("Group Chat Module") .'</h3>';
+			$output .= '<p>'.  t("Cloud computing is the underlying technology used to build Chat module. All the extensive features of cloud computing is taken into account while developing this module.").'</p>';
+			$output .= '<h5>'.  t("How to use this module") .'</h3>';
+			$output .= '<p>'.  t("Add Chat module into Drupal modules folder
+
+Activate module using Admin Panel
+
+Using configuration link from the admin section open PubNub setting and add the API provided by the site http://www.pubnub.com
+
+Place PubNub chat box using structure Menu using admin section
+
+place the pubnub chat block and save the setting.").'</p>';
+			$output .= '<h5>'.  t("Live Blogging") .'</h3>';
+			$output .= '<p>'.  t("A very rich featured live blogging developed in drupal with the pubnub cloud computing technology. The feature includes Image and video upload.").'</p>';
+			$output .= '<h5>'.  t("How to use this module") .'</h3>';
+			$output .= '<p>'.  t("Add Blogg module into Drupal modules folder
+
+Activate module using Admin Panel
+
+Using configuration link from the admin section open PubNub setting and add the API provided by the site http://www.pubnub.com
+
+Start using live Blogg by navigation menu use the blogger link").'</p>';
+		return $output;
+		}
+	} 
+	
+/**
+* Implementation of hook_permission()
+**/
+
+/*function pubnub_communicator_permission() {
+  return array(
+    'view live blogs' => array(
+      'title' => t('View live blogs'), 
+    ),
+	'view live chats' => array(
+      'title' => t('View chat box'), 
+    ),
+  );
+}*/
+
+/**
+* Implementation of hook_menu()
+*/
+	function pubnub_communicator_menu() {
+	
+		$items['admin/config/system/pubnub'] = array(
+			'title' => 'PubNub Settings',
+			'description' => 'Configure Pubnub client',
+			'page callback' => 'drupal_get_form',
+			'page arguments' => array('pubnub_settings'),
+			'access arguments' => array('administer site configuration'),
+			'file' => 'includes/module_forms.inc'
+		);	
+		return $items;
+	}

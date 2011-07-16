@@ -1,0 +1,176 @@
+#pubnub_chat a,  #pubnub_chat a:hover,  #pubnub_chat a:active,  #pubnub_chat a:focus, #pubnub_chat button,  #pubnub_chat input {
+        outline: 0;
+        margin: 0;
+        padding: 0;
+
+        text-decoration: none;
+        font-size: 14px;
+        line-height: 18px;
+        font-family: 'Amaranth', arial, serif;
+        text-shadow: rgba(0,0,0,0.1) 0 1px 1px;
+
+        color: #444;
+    }
+    #pubnub_chat a {
+        text-decoration: underline;
+    }
+    #pubnub_chat a:hover {
+        text-decoration: none;
+        color: #09f;
+    }
+     #pubnub_chat #chat-textbox,  #pubnub_chat #chat-send {
+        padding: 4px;
+        color: #fff;
+        background: #eee;
+        border: 2px solid #999;
+
+        margin: 5px;
+        font-size: 14px;
+        line-height: 14px;
+
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        -ms-border-radius: 4px;
+        -o-border-radius: 4px;
+        border-radius: 4px;
+    }
+    #pubnub_chat #chat-send {
+        outline: 0;
+        cursor: pointer;
+        text-align: center;
+        text-shadow: rgba(0,0,0,0.7) 0 1px 1px;
+        color: #eee;
+        font-family: 'Nunito', arial, serif;
+        font-weight: 700;
+        width: 50px;
+
+        background: #3af url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAABQCAYAAABoMayFAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAEtSURBVHja7NvBDYQwEARBkMiG/LNxKPaaEHh7pyoEHq1Zn+4eY7wXQKCnqnwFQAABogK41vIVAAsQQAABBBBAAAEEEKBNAOecvgJgAQIIIIAAAjQOoH+CABYggAUIIIAATmAACxDAAgRoEEB/hQMsQIC0AHoDBCxAAAsQwAIEsAABLEAACxBAAAGcwADHBdBf4QALECAtgN4AAQEEcAIDWIAAAgjgBAawAAEsQAALEEAAAZzAABYggAUIIIAATmAAAQRwAgNYgAAWIIAFCGABAggggBMYwAIEsAABfgO49/YVAAsQICqA3gABCxAgLYDeAAELECAtgN4AAQsQIC2A3gABJzCAExjACQzgBAYQQAABBBBAAAEEOC6AfgUGLEAAAQRwAgNYgAAdfQIMACob7szyxrOuAAAAAElFTkSuQmCC');
+
+        border: 0px;
+        -webkit-box-shadow: inset rgba(0,0,0,0.1) 0 0 10px;
+        -moz-box-shadow: inset rgba(0,0,0,0.1) 0 0 10px;
+        -ms-box-shadow: inset rgba(0,0,0,0.1) 0 0 10px;
+        -o-box-shadow: inset rgba(0,0,0,0.1) 0 0 10px;
+        box-shadow: inset rgba(0,0,0,0.1) 0 0 10px;
+
+        -webkit-border-radius: 7px;
+        -moz-border-radius: 7px;
+        -ms-border-radius: 7px;
+        -o-border-radius: 7px;
+        border-radius: 7px;
+    }
+    #pubnub_chat #chat-send:hover {
+        background-color: #c00;
+    }
+    #pubnub_chat #chat-send:active {
+        background-color: #0af;
+    }
+    #pubnub_chat #chat-textbox {
+        width: 45%;
+        text-shadow: rgba(255,255,255,0.9) 0 1px 2px;
+        color: #555;
+    }
+    #pubnub_chat #chat-bar {
+        z-index: 100;
+        top: 30px;
+        left: 0;
+    }
+    #pubnub_chat #chat-display {
+        z-index: 200;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        max-height: 327px;
+        overflow-y: auto;
+       /* background: #fff url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAFCAYAAABIHbx0AAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAABpJREFUGNNjZGBgYGUgDH4TUsDEQCUwjA0CAE5RAQroMxhVAAAAAElFTkSuQmCC');*/
+        border-top: 1px solid #fff;
+    }
+    #pubnub_chat .chat-item {
+        padding: 10px;
+        border-bottom: 1px solid #fff;
+        background-color: #f2f2f2;
+        background-color: rgba(240,240,240,0.5);
+
+        -webkit-transition: all 0.5s;
+        -moz-transition: all 0.5s;
+        -ms-transition: all 0.5s;
+        -o-transition: all 0.5s;
+        transition: all 0.5s;
+		
+		text-decoration: none;
+        font-size: 14px;
+        line-height: 18px;
+        font-family: 'Amaranth', arial, serif;
+		text-shadow: rgba(0,0,0,0.1) 0 1px 1px;
+    }
+	#pubnub_chat .chat-item b{
+	font-size: 14px;
+	}
+    #pubnub_chat .template { display: none }    
+    #pubnub_chat #list {
+        z-index: 50;
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        /*background: #fafafa url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAFCAYAAABIHbx0AAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAABpJREFUGNNjZGBgYGUgDH4TUsDEQCUwjA0CAE5RAQroMxhVAAAAAElFTkSuQmCC');*/
+    }
+	
+	#pubnub_blogs
+	{
+		clear:both;
+	}
+	#pubnub_blogs .pn_blog
+	{
+		background-color:#ECF6FC;
+		padding:10px;
+		margin-bottom:1px;
+	}
+	#pn-blogform .form-file
+	{
+		visibility:hidden;
+	}
+	.duplicate_camera
+	{
+		clear:both;
+		background:url(images/cam_icon.png) no-repeat left top !important;
+		width:40px !important;
+		height:28px;
+		border-radius:0px !important;
+		border:0px solid !important;
+		margin-top:-10px;
+		position:absolute;
+		cursor:pointer;
+		left:10px;
+	}
+	.pn_power{
+		font-size:9px;
+		text-align:right;
+	}
+	.pn_power a{
+		font-size:9px;
+		color:#CC0000;
+	}
+	#edit-picorvid
+	{
+		width:40px;
+		float:left;
+	}
+	.pn_powered{
+		clear:both;
+		text-align:right;
+	}
+	.form-item-pubnub-blog
+	{
+		clear:both;
+	}
+	.form-item-files-picorvid .description
+	{
+		float:left;
+		font-family:Arial, Helvetica, sans-serif;
+		font-size:10px;
+		font-style:italic;
+	}
+	.cboth
+	{
+		clear:both;
+	}
